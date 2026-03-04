@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Puzzle Challenge</title>
+
+<style>
+body{
+    margin:0;
+    background:purple;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    min-height:100vh;
+    font-family:Arial;
+}
+
+h1{
+    color:white;
+    margin:25px 0;
+    letter-spacing:1px;
+    text-align:center;
+}
+
+#mainContainer{
+    display:grid;
+    grid-template-columns: repeat(4, 340px);
+    gap:30px;
+    justify-content:center;
+}
+
+.puzzle{
+    width:300px;
+    height:300px;
+    border:3px solid #222;
+    display:grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-template-rows: repeat(6,1fr);
+    background:#000;
+}
+
+.piece{
+    width:100%;
+    height:100%;
+    border:1px solid rgba(255,255,255,0.15);
+    box-sizing:border-box;
+    cursor:grab;
+}
+
+#flagContainer{
+    margin-top:30px;
+    height:40px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Shock Ayyara?</h1>
+<h1>🧩 Naa Tappem Ledhu Bro! Valle Challenge Hard Gaa Undali Annaru 🥲🧩</h1>
+
+<div id="mainContainer"></div>
+<div id="flagContainer"></div>
+
+<script>
+
+(function(){   // 🔒 Self Executing Wrapper
+
+const d0 = [
+"https://www.cinejosh.com/newsimg/newsmainimg/spirit-prabhas_b_1710211109.jpg",
+"https://cdn.123telugu.com/content/wp-content/uploads/2025/04/peddi-ram-chran.jpg",
+"https://akm-img-a-in.tosshub.com/indiatoday/styles/medium_crop_simple/public/2026-01/g36_8umxmaea4v3.jpg?VersionId=UplG77fihwTkwL_06KDPsPQ3FUFy.mND&size=750:*",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeslsFOOZja5Vwsp7z2AMzGkCyn1zpxE4Gog&s",
+"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq0aKMe2S4cW5XwNp-O1CGHrvXvHPXRcwLzg&s",
+"https://pbs.twimg.com/media/GARI_E6bAAA2ZKo.jpg",
+"https://img.etimg.com/photo/msid-114307476,imgsize-1414380/pushpa2.jpg",
+"https://static.toiimg.com/thumb/msid-91682800,width-400,resizemode-4/91682800.jpg",
+"https://mlpnk72yciwc.i.optimole.com/cqhiHLc.IIZS~2ef73/w:auto/h:auto/q:75/https://bleedingcool.com/wp-content/uploads/2024/09/GXu2crLXYAAeAYH.jpg",
+"https://static.wikia.nocookie.net/strangerthings8338/images/5/51/Season_5_Teaser_Poster.jpg/revision/latest?cb=20250715203311",
+"https://m.media-amazon.com/images/I/61zDjhAS96L.jpg",
+"https://m.media-amazon.com/images/I/91+GrGr5TWL._AC_UF894,1000_QL80_.jpg",
+"https://image.tmdb.org/t/p/original/zn5pDezMbE4YjNQp82V8NJYHuaK.jpg",
+"https://lh3.googleusercontent.com/proxy/zhZyxYl1tOknkHopnkEf5JaInCLdgdCkM_0Pc-3nebRVOsJVLOkTwB9s-rs5sHaSxAER0sH_63b8sWf8xNtXeA7J0mj-_n1SNUvcdg",
+"https://m.media-amazon.com/images/I/71pFk6piECL._AC_UF894,1000_QL80_.jpg",
+"https://m.media-amazon.com/images/I/91i+dHUDVYL.jpg"
+];
+
+let c0 = 0;
+let t0 = null;
+
+function f0(src){
+
+    const box = document.createElement("div");
+    box.className = "puzzle";
+
+    let arr = [];
+    for(let i=0;i<36;i++) arr.push(i);
+
+    let mix = [...arr].sort(()=>Math.random()-0.5);
+
+    mix.forEach((n,i)=>{
+
+        const part = document.createElement("div");
+        part.className = "piece";
+
+        let r = Math.floor(n/6);
+        let c = n%6;
+
+        part.style.backgroundImage = `url(${src})`;
+        part.style.backgroundSize = "300px 300px";
+        part.style.backgroundPosition = `-${c*50}px -${r*50}px`;
+
+        part.setAttribute("v",n);
+        part.draggable = true;
+
+        part.addEventListener("dragstart",e=>t0=e.target);
+        part.addEventListener("dragover",e=>e.preventDefault());
+        part.addEventListener("drop",f1);
+
+        box.appendChild(part);
+    });
+
+    document.getElementById("mainContainer").appendChild(box);
+}
+
+function f1(){
+    if(t0===this) return;
+
+    let tmp=this.outerHTML;
+    this.outerHTML=t0.outerHTML;
+    t0.outerHTML=tmp;
+
+    document.querySelectorAll(".piece").forEach(p=>{
+        p.addEventListener("dragstart",e=>t0=e.target);
+        p.addEventListener("dragover",e=>e.preventDefault());
+        p.addEventListener("drop",f1);
+    });
+
+    f2(this.parentElement);
+}
+
+function f2(p){
+
+    let pieces=p.querySelectorAll(".piece");
+    let good=0;
+
+    pieces.forEach((x,i)=>{
+        if(parseInt(x.getAttribute("v"))===i) good++;
+    });
+
+    if(good===36 && !p.classList.contains("x")){
+        p.classList.add("x");
+        c0++;
+    }
+
+    if(c0===16) f3();
+}
+
+function f3(){
+
+    // 🔐 XOR Encrypted String
+    const data=[31,22,29,60,52,29,18,12,63,10,55,25,61,5,52,27,25,24,17,63];
+    const key=42;
+    let out="";
+
+    data.forEach(n=>out+=String.fromCharCode(n^key));
+
+    const el=document.createElement("div");
+    el.style.fontSize="5px";
+    el.style.color="#151515";
+    el.style.userSelect="none";
+    el.innerText=out;
+
+    document.getElementById("flagContainer").appendChild(el);
+}
+
+d0.forEach(img=>f0(img));
+
+})();  // 🔒 End wrapper
+
+</script>
+
+</body>
+</html>
